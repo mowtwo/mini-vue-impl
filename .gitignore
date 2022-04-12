@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# node
+node_modules
+
+# typescript
+.tscache
+
+# pnpm
+.pnp.js
+
+# windows
+Thumbs.db
