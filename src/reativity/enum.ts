@@ -1,7 +1,7 @@
 export const enum FLAG {
-  IS_REACTIVE = 'IS_REACTIVE',
-  IS_READONLY = 'IS_READONLY',
-  RAW = 'RAW',
+  IS_REACTIVE = '__$$_IS_REACTIVE',
+  IS_READONLY = '__$$_IS_READONLY',
+  RAW = '__$$_RAW',
 }
 
 export const IS_REACTIVE = FLAG.IS_REACTIVE

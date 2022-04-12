@@ -1,8 +1,15 @@
-import { RAW } from "./reativity/enum";
-import { reactive, toRaw } from "./reativity/reactive";
+import { reactive, toRaw } from "./reativity";
+import { effect } from "./reativity/effect";
 
-const obs = reactive({
+const raw = (reactive({
   a: 1
+}))
+
+effect(() => {
+  console.log(raw.a)
 })
 
-console.log(obs[RAW])
+raw.a++
+raw.a++
+raw.a++
+raw.a++
