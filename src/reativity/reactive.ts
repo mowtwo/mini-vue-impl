@@ -1,17 +1,32 @@
-import { track } from "./track"
-import { trigger } from "./trigger"
+import { isObject } from "../shared/type-guard"
+import { RAW } from "./enum"
+import { ReactiveHandle, ReadOnlyHandle, ShallowReactiveHandle, ShallowReadonlyHandle } from "./handle"
+import { Reactive } from "./type"
+import { isProxy } from "./util"
 
-export function reactive<T extends Object>(target: T): T {
-  return new Proxy<T>(target, {
-    get(target, key, receiver) {
-      const value = Reflect.get(target, key, receiver)
-      track(target, key)
-      return value
-    },
-    set(target, key, value, receiver) {
-      const res = Reflect.set(target, key, value, receiver)
-      trigger(target, key)
-      return res
+export function reactive<T extends object>(raw: T): Reactive<T> {
+  return new Proxy<T>(raw, new ReactiveHandle()) as Reactive<T>
+}
+
+export function readonly<T extends object>(raw: T): Reactive<T> {
+  return new Proxy<T>(raw, new ReadOnlyHandle()) as Reactive<T>
+}
+
+export function shallowReadonly<T extends object>(raw: T): Reactive<T> {
+  return new Proxy<T>(raw, new ShallowReadonlyHandle()) as Reactive<T>
+}
+
+export function shallowReactive<T extends object>(raw: T): Reactive<T> {
+  return new Proxy<T>(raw, new ShallowReactiveHandle()) as Reactive<T>
+}
+
+export function toRaw<T>(observed: Reactive<T>): T {
+  if (isObject(observed)) {
+    if (isProxy(observed)) {
+      return observed[RAW] as T;
+    } else {
+      return observed
     }
-  })
+  }
+  return observed
 }
