@@ -24,20 +24,20 @@ export class ReactiveEffect<T extends Function = Function> {
   /**当前effect */
   static activeEffect: ReactiveEffect | undefined = undefined
   /**是否应该track的标记 */
-  static shouldTrack = true
+  // static shouldTrack = true
   /**是否可以track */
-  static get isTrackable() {
-    return ReactiveEffect.shouldTrack && ReactiveEffect.activeEffect !== undefined
-  }
+  // static get isTrackable() {
+  //   return ReactiveEffect.shouldTrack && ReactiveEffect.activeEffect !== undefined
+  // }
 
-  static cleanup(effect: ReactiveEffect) {
-    if (ReactiveEffect.activeEffect) {
-      for (const deps of effect.deps) {
-        deps.delete(effect)
-      }
-      effect.deps = []
-    }
-  }
+  // static cleanup(effect: ReactiveEffect) {
+  //   if (ReactiveEffect.activeEffect) {
+  //     for (const deps of effect.deps) {
+  //       deps.delete(effect)
+  //     }
+  //     effect.deps = []
+  //   }
+  // }
 
   deps: Array<Set<ReactiveEffect>> = []
   active = true
@@ -51,28 +51,28 @@ export class ReactiveEffect<T extends Function = Function> {
     this._onStop = fn
   }
   run() {
-    if (!this.active) {
-      return this.fn()
-    }
-    ReactiveEffect.shouldTrack = true
-    ReactiveEffect.activeEffect = this
+    // if (!this.active) {
+    //   return this.fn()
+    // }
+    // ReactiveEffect.shouldTrack = true
+    // ReactiveEffect.activeEffect = this
     const res = this.fn()
-    ReactiveEffect.shouldTrack = false
+    // ReactiveEffect.shouldTrack = false
     return res
   }
 
-  stop() {
-    ReactiveEffect.cleanup(this)
-    this._onStop?.()
-    this.active = false
-  }
+  // stop() {
+  //   ReactiveEffect.cleanup(this)
+  //   this._onStop?.()
+  //   this.active = false
+  // }
 }
 
 export function effect<T extends Function>(fn: T, options?: Partial<ReactiveEffectOption & OnStop>) {
   // 分解options
-  const { onStop, ...EffectOptions } = options ?? {}
-  const _effect = new ReactiveEffect(fn, EffectOptions)
-  _effect.onStop = onStop
+  // const { onStop, ...EffectOptions } = options ?? {}
+  const _effect = new ReactiveEffect(fn)
+  // _effect.onStop = onStop
   _effect.run()
 
   const runner = (() => {
@@ -82,6 +82,6 @@ export function effect<T extends Function>(fn: T, options?: Partial<ReactiveEffe
   return runner
 }
 
-export function stop(effect: ReactiveEffect) {
-  effect.stop()
-}
+// export function stop(effect: ReactiveEffect) {
+//   effect.stop()
+// }

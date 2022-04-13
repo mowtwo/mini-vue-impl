@@ -3,9 +3,9 @@ import { ReactiveEffect } from "./effect";
 export const targetMap = new WeakMap<object, Map<string | symbol, Set<ReactiveEffect>>>();
 
 export function track<T extends object>(target: T, key: string | symbol) {
-  if (!ReactiveEffect.isTrackable) {
-    return
-  }
+  // if (!ReactiveEffect.isTrackable) {
+  //   return
+  // }
   /**
    * 获取当前代理对象的所有Effect的map，若不存在则创建
    */
