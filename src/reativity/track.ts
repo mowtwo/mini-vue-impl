@@ -28,7 +28,7 @@ export function track<T extends object>(target: T, key: string | symbol) {
 }
 
 export function trackEffect(deps: Set<ReactiveEffect>) {
-  if (deps.has(ReactiveEffect.activeEffect!) || !ReactiveEffect.activeEffect) {
+  if (!ReactiveEffect.activeEffect || deps.has(ReactiveEffect.activeEffect!)) {
     return
   }
   deps.add(ReactiveEffect.activeEffect!)

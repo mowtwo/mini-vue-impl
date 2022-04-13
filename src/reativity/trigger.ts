@@ -12,6 +12,11 @@ export function trigger<T extends object>(target: T, key: string | symbol) {
 
 export function triggerEffect(deps?: Set<ReactiveEffect>) {
   for (const effect of deps ?? []) {
+    // 如果有scheduler则调用
+    if (typeof effect.options.get('scheduler') === 'function') {
+      effect.options.get('scheduler')!()
+      return
+    }
     effect.run();
   }
 }

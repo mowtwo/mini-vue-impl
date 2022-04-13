@@ -3,7 +3,7 @@ interface OnStop {
 }
 
 interface ReactiveEffectOption {
-
+  scheduler: () => void;
 }
 
 interface Runner {
@@ -14,9 +14,9 @@ interface Runner {
 type ReactiveEffectOptionKey = keyof ReactiveEffectOption
 
 class ReactiveEffectOptionValue {
-  constructor(private options: ReactiveEffectOption) { }
+  constructor(private options: Partial<ReactiveEffectOption> = {}) { }
   get<T extends ReactiveEffectOptionKey>(key: T, defaultValue?: ReactiveEffectOption[T]): ReactiveEffectOption[T] | undefined {
-    return (this.options[key] || defaultValue) ?? undefined
+    return this.options?.[key] ?? defaultValue
   }
 }
 
@@ -55,7 +55,7 @@ export class ReactiveEffect<T extends Function = Function> {
     //   return this.fn()
     // }
     // ReactiveEffect.shouldTrack = true
-    // ReactiveEffect.activeEffect = this
+    ReactiveEffect.activeEffect = this
     const res = this.fn()
     // ReactiveEffect.shouldTrack = false
     return res
@@ -70,8 +70,8 @@ export class ReactiveEffect<T extends Function = Function> {
 
 export function effect<T extends Function>(fn: T, options?: Partial<ReactiveEffectOption & OnStop>) {
   // 分解options
-  // const { onStop, ...EffectOptions } = options ?? {}
-  const _effect = new ReactiveEffect(fn)
+  const { onStop, ...EffectOptions } = options ?? {}
+  const _effect = new ReactiveEffect(fn, EffectOptions)
   // _effect.onStop = onStop
   _effect.run()
 
