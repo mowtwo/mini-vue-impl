@@ -1,3 +1,4 @@
+import { ReactiveEffect } from "./effect";
 import { targetMap } from "./track";
 
 export function trigger<T extends object>(target: T, key: string | symbol) {
@@ -6,7 +7,11 @@ export function trigger<T extends object>(target: T, key: string | symbol) {
    */
   const depsMap = targetMap.get(target);
   const deps = depsMap && depsMap.get(key);
-  for (const effect of deps || []) {
+  triggerEffect(deps)
+}
+
+export function triggerEffect(deps?: Set<ReactiveEffect>) {
+  for (const effect of deps ?? []) {
     effect.run();
   }
 }

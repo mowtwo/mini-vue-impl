@@ -64,7 +64,7 @@ function flagValue(flag: FLAG, handle: BaseHandle<object>) {
   return false
 }
 
-export class ReadOnlyHandle<T extends object> extends BaseHandle<T> {
+export class ReadonlyHandle<T extends object> extends BaseHandle<T> {
   constructor() {
     super(true)
   }
