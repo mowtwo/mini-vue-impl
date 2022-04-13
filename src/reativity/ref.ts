@@ -5,7 +5,7 @@ import { IS_REF } from "./enum";
 import { reactive } from "./reactive";
 import { trackEffect } from "./track";
 import { triggerEffect } from "./trigger";
-import { _Ref as Ref } from "./type";
+import { ProxyRefs, UnWrapRefsDeep, _Ref as Ref } from "./type";
 import { isRef } from "./util"
 
 class RefImpl<T> {
@@ -43,4 +43,20 @@ export function unRef<T>(wrapper: Ref<T>): T {
   }
   // 懒得写类型守卫了
   return wrapper as unknown as T
+}
+
+export function proxyRefs<T extends object>(obj: T): ProxyRefs<T> {
+  return new Proxy<ProxyRefs<T>>(obj as ProxyRefs<T>, {
+    get(target, p, receiver) {
+      return unRef(Reflect.get(target, p, receiver)) as T[keyof T]
+    },
+    set(target, p, value, receiver) {
+      type K = keyof T
+      if (isRef(target[p as K]) && !isRef(value)) {
+        return (target[p as K] as unknown as Ref<T[K]>).value = value
+      } else {
+        return Reflect.set(target, p, value, receiver)
+      }
+    }
+  })
 }

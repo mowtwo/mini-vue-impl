@@ -16,3 +16,17 @@ export type _Ref<T> = {
 export type Reactive<T> = T
 
 export type Ref<T> = { value: T }
+
+export type UnWrapRef<T> = T extends Ref<infer V> ? V : T
+
+export type UnWrapRefs<T> = {
+  [K in keyof T]: UnWrapRef<T[K]>
+}
+
+export type UnWrapRefsDeep<T> = {
+  [K in keyof T]: T[K] extends Ref<infer V> ? UnWrapRefsDeep<V> : T[K]
+}
+
+export type ProxyRefs<T> = {
+  [K in keyof T]: T[K] extends Ref<infer V> ? V | Ref<V> : T[K] | Ref<T[K]>
+}
